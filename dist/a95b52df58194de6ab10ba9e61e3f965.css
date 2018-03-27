@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+}
+
+.container {
+  margin: 0 auto;
+  width: 80%;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0px;
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+}
+
+.filter-bar input {
+  height: 30px;
+}
+
+.graphs-container {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  margin-top: 10px;
+  padding: 20px;
+  display: flex;
+}
+
+.team-graph {
+  border: 1px solid saddlebrown;
+  width: auto;
+  margin-right: 10px;
+}
