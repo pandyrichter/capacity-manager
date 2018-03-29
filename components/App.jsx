@@ -5,7 +5,7 @@ import GraphsContainer from './GraphsContainer';
 const App = () => {
   return (
     <div className="container">
-      <h1>BW Capacity Manager</h1>
+      <h1>Capacity Manager</h1>
       <FilterBar />
       <GraphsContainer />
     </div>
