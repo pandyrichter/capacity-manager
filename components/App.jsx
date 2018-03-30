@@ -5,7 +5,12 @@ import GraphsContainer from './GraphsContainer';
 const App = () => {
   return (
     <div className="container">
-      <h1>Capacity Manager</h1>
+      <div className="nav">
+        <h1>Capacity Manager</h1>
+        <ul>
+          <li>Notifications</li>
+        </ul>
+      </div>
       <FilterBar />
       <GraphsContainer />
     </div>

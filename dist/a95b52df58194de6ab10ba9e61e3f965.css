@@ -10,6 +10,16 @@ body {
   width: 80%;
 }
 
+ul {
+  list-style: none;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .filter-bar {
   display: flex;
   align-items: center;
@@ -17,6 +27,14 @@ body {
   padding: 10px 0px;
   border-top: 1px solid lightgray;
   border-bottom: 1px solid lightgray;
+}
+
+.filter-bar ul {
+  display: flex;
+}
+
+.filter-bar li {
+  margin-right: 10px;
 }
 
 .filter-bar input {
@@ -28,6 +46,9 @@ body {
   border-radius: 5px;
   margin-top: 10px;
   padding: 20px;
+}
+
+.graphs-detail {
   display: flex;
 }
 
