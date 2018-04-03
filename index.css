@@ -56,4 +56,16 @@ ul {
   border: 1px solid saddlebrown;
   width: auto;
   margin-right: 10px;
+  padding: 10px;
+}
+
+.project-detail {
+  border: 1px solid green;
+  border-radius: 2px;
+  margin-bottom: 5px;
+  padding: 4px;
+}
+
+.project-detail__collapse {
+  display: none;
 }
