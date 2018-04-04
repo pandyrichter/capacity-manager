@@ -41,11 +41,13 @@ ul {
   height: 30px;
 }
 
-.graphs-container {
+.data-container {
   border: 1px solid lightgray;
   border-radius: 5px;
   margin-top: 10px;
   padding: 20px;
+  display: flex;
+  max-height: 600px;
 }
 
 .graphs-detail {
@@ -59,6 +61,15 @@ ul {
   padding: 10px;
 }
 
+.projects-detail {
+  max-height: 100%;
+}
+
+.projects-detail__overflow {
+  max-height: 90%;
+  overflow: scroll;
+}
+
 .project-detail {
   border: 1px solid green;
   border-radius: 2px;
@@ -67,5 +78,4 @@ ul {
 }
 
 .project-detail__collapse {
-  display: none;
 }

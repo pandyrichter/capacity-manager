@@ -1,6 +1,6 @@
 import React from 'react';
 import FilterBar from './FilterBar';
-import GraphsContainer from './GraphsContainer';
+import DataContainer from './DataContainer';
 
 const App = () => {
   return (
@@ -12,7 +12,7 @@ const App = () => {
         </ul>
       </div>
       <FilterBar />
-      <GraphsContainer />
+      <DataContainer />
     </div>
   )
 }
