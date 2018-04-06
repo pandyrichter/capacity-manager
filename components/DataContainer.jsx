@@ -4,6 +4,7 @@ import api from '../helpers/api';
 import Airtable from 'airtable';
 import TeamBlock from './TeamBlock';
 import ProjectDetail from './ProjectDetail';
+import config from '../config';
 
 class DataContainer extends React.Component {
   constructor (props) {
@@ -32,8 +33,8 @@ class DataContainer extends React.Component {
 
   checkForBatch(offset='') {
     let self = this;
-    const apiUrl = `https://api.airtable.com/v0/apputYC83th3otdfX/Team%20Tracking${offset}`;
-    const apiAuth = 'Bearer keyMMhm1hEx7OtaIC'
+    const apiUrl = `${config.api}${offset}`;
+    const apiAuth = `${config.key}`;
 
     axios.get(apiUrl, {
       headers: { Authorization: apiAuth }
@@ -125,7 +126,7 @@ class DataContainer extends React.Component {
           </div>}
       </div>
     )
-  }
+  };
 };
 
 module.exports = DataContainer;
