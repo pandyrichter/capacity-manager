@@ -7,7 +7,7 @@ body {
 
 .container {
   margin: 0 auto;
-  width: 80%;
+  width: 1200px;
 }
 
 ul {
@@ -39,6 +39,7 @@ ul {
 
 .filter-bar input {
   height: 30px;
+  padding: 5px 10px;
 }
 
 .data-container {
@@ -46,7 +47,6 @@ ul {
   border-radius: 5px;
   margin-top: 10px;
   padding: 20px;
-  display: flex;
   max-height: 600px;
 }
 
@@ -67,7 +67,7 @@ ul {
 
 .projects-detail__overflow {
   max-height: 90%;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .project-detail {
@@ -75,7 +75,4 @@ ul {
   border-radius: 2px;
   margin-bottom: 5px;
   padding: 4px;
-}
-
-.project-detail__collapse {
 }

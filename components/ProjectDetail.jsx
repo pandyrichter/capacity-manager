@@ -1,4 +1,6 @@
 import React from 'react';
+import Card, { CardContent } from 'material-ui/Card';
+import Typography from 'material-ui/Typography';
 
 const ProjectDetail = (props) => {
   const project = {
@@ -10,9 +12,11 @@ const ProjectDetail = (props) => {
   };
 
   return (
-    <div className="project-detail" style={!project.status ? {backgroundColor:'green'} : {backgroundColor:'red'}}>
-      <div>{project.name}</div>
-      <div className="project-detail__collapse">
+    <Card>
+      <CardContent>
+        <Typography variant="headline" component="h2">
+        {project.name}  
+        </Typography>
         {project.projmgr 
         ? <div>{project.projmgr}</div>
         : <div>No Manager</div>}
@@ -25,8 +29,8 @@ const ProjectDetail = (props) => {
         {!project.status
         ? <div>Open</div>
         : <div>{project.status}</div> }
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
 

@@ -5,26 +5,25 @@ import Airtable from 'airtable';
 import TeamBlock from './TeamBlock';
 import ProjectDetail from './ProjectDetail';
 
-const base = new Airtable({apiKey: 'keyMMhm1hEx7OtaIC'}).base('apputYC83th3otdfX');
-
 class DataContainer extends React.Component {
-  constructor () {
-    super();
+  constructor (props) {
+    super(props);
     this.state = {
       projectsLoading: true,
-      projects: [],
-    }
+      projects: []
+    };
+
     this.checkForBatch = this.checkForBatch.bind(this);
-  }
+  };
 
   componentDidMount() {
     this.checkForBatch();
-  }
+  };
 
   /* 
-  1 Load initial batch
+  1 Load initial batch from Airtable
   2 Save records from inital batch to state
-  3 If batch containts offset:
+  3 If batch contains offset:
     Load records using offset in params
     Save records to state
   4 If batch doesnt contain offset:
@@ -43,8 +42,8 @@ class DataContainer extends React.Component {
         projects: [...self.state.projects, ...res.data.records]
       });
       self.checkForOffset(res.data.offset);
-    })
-  }
+    });
+  };
 
   checkForOffset(offset) {
     // offset indicates additional records in Airtable
@@ -54,13 +53,28 @@ class DataContainer extends React.Component {
     } else {
       this.setState({projectsLoading: false});
     }
-  }
+  };
 
-  filterProjectsByProp(projects, prop, str) {
+  filterProjectsByStr(projects, prop, str) {
     return projects.filter(project => {
       // some props are arrays, so therefore need to .some > .includes
-      return project.fields[prop].includes(str);
+      return project.fields[prop].toLowerCase().includes(str.toLowerCase());
     });
+  };
+
+  filterProjectsByStatus(projects, s) {
+    switch (s) {
+      case "Closed":
+        return projects.filter(p => p.fields["Status Update?"]);
+      case "Outstanding":
+        return projects.filter(p => !p.fields["Status Update?"]);
+      case "Assigned":
+        return projects.filter(p => p.fields["PM Submitted"]);
+      case "Unassigned":
+        return projects.filter(p => !p.fields["PM Submitted"]);
+      default:
+        return projects;
+    }
   };
 
   sortProjectsByProp(projects, prop) {
@@ -74,7 +88,6 @@ class DataContainer extends React.Component {
       if (projA > projB) {
         return 1;
       }
-
       return 0;
     });
   };
@@ -82,7 +95,8 @@ class DataContainer extends React.Component {
   render() {
     const teams = ["Boulder", "Chicago", "Dallas", "Latin America"];
     const projects = this.state.projects;
-    const filteredProjects = this.filterProjectsByProp(projects, "Project Name", "Hilton");
+    const searchedProjects = this.filterProjectsByStr(projects, "Project Name", this.props.searchTerm);
+    const filteredProjects = this.filterProjectsByStatus(searchedProjects, this.props.filterParam);
     const sortedProjects = this.sortProjectsByProp(filteredProjects, "Project Name");
 
     return (
@@ -100,7 +114,7 @@ class DataContainer extends React.Component {
                 })}
               </div>
               <div className="projects-detail">
-                <h5>Projects</h5>
+                <h5>{this.props.filterParam} Projects: {sortedProjects.length}</h5>
                 <div className="projects-detail__overflow">
                   {sortedProjects
                     .map(project => {
