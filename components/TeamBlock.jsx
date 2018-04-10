@@ -8,10 +8,16 @@ class TeamBlock extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      outcomes: {}
-    }
+    this.handleTeamChange = this.handleTeamChange.bind(this);
   };
+
+  handleTeamChange() {
+    if (this.props.activeteam) {
+      this.props.onTeamChange('');
+    } else {
+      this.props.onTeamChange(this.props.team);
+    }
+  }
 
   groupProjectsByStatus(projects) {
     return _.groupBy(projects, project => {
@@ -24,9 +30,22 @@ class TeamBlock extends React.Component {
     const statusGroups = this.groupProjectsByStatus(projects);
     const statusTypes = Object.keys(statusGroups);
 
+    const activeStyle = {
+      border: '2px solid lightblue',
+      backgroundColor: 'lightgray'
+    }
+
+    const inactiveStyle = {
+      border: '2px solid lightgray'
+    }
+
     return (
-        <div className="team-graph">
-          <h3>{this.props.office}</h3>
+        <div 
+        className="team-block"
+        onClick={this.handleTeamChange}
+        style={this.props.activeteam ? activeStyle : inactiveStyle }
+        >
+          <h3>{this.props.team}</h3>
           <div className="team-graph__detail">
             <p>Total: {this.props.projects.length}</p>
             <p>Resolved: </p>

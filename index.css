@@ -29,17 +29,26 @@ ul {
   border-bottom: 1px solid lightgray;
 }
 
-.filter-bar ul {
+.filter-button-wrapper {
   display: flex;
-}
-
-.filter-bar li {
-  margin-right: 10px;
+  max-width: 80%;
+  align-items: center;
 }
 
 .filter-bar input {
   height: 30px;
   padding: 5px 10px;
+  margin-right: 8px;
+}
+
+button.filter-button {
+  border: 1px solid lightblue;
+  padding: 5px 8px;
+  border-radius: 5px;
+  color: #333;
+  cursor: pointer;
+  height: 40px;
+  margin: 0px 8px;
 }
 
 .data-container {
@@ -54,11 +63,12 @@ ul {
   display: flex;
 }
 
-.team-graph {
-  border: 1px solid saddlebrown;
-  width: auto;
+.team-block {
+  width: 25%;
   margin-right: 10px;
   padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .projects-detail {
@@ -75,4 +85,5 @@ ul {
   border-radius: 2px;
   margin-bottom: 5px;
   padding: 4px;
+  display: none;
 }

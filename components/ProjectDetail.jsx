@@ -17,12 +17,12 @@ const ProjectDetail = (props) => {
         <Typography variant="headline" component="h2">
         {project.name}  
         </Typography>
+        {project.team 
+        ? <div>{project.team}</div>
+        : <div>No Team</div>}
         {project.projmgr 
         ? <div>{project.projmgr}</div>
         : <div>No Manager</div>}
-        {project.team 
-        ? <div>{project.team}</div>
-        : <div>No End Date</div>}
         {project.endDate 
         ? <div>{project.endDate}</div>
         : <div>No End Date</div>}

@@ -31,21 +31,37 @@ class FilterBar extends React.Component {
   };
 
   render () {
+    const filterTypes = ["Assigned", "Unassigned", "Outstanding", "Closed"];
     const searchTerm = this.props.searchTerm;
     const filterParam = this.props.filterParam;
 
+    const activeStyle = {
+      backgroundColor: 'lightblue'
+    };
+
+    const inactiveStyle = {
+      backgroundColor: 'transparent'
+    }
+
     return (
     <div className="filter-bar">
+    <div className="filter-button-wrapper">
       <h2>Filter:</h2>
-      <ul>
-        <button onClick={this.handleFilterChange} value="Assigned">Assigned</button>
-        <button onClick={this.handleFilterChange} value="Unassigned">Unassigned</button>
-        <button onClick={this.handleFilterChange} value="Outstanding">Outstanding</button>
-        <button onClick={this.handleFilterChange} value="Closed">Closed</button>
-      </ul>
+        {filterTypes.map(filter => {
+          return (<button
+          key={filter}
+          onClick={this.handleFilterChange}
+          value={filter}
+          className="filter-button"
+          style={filterParam === filter ? activeStyle : inactiveStyle }
+          >{filter}</button>)
+        })}
+    </div>
       <form onSubmit={this.handleSubmit}>
         <input type="text" value={searchTerm} onChange={this.handleSearchChange} placeholder="Search..."/>
-        <button onClick={this.clearSearch}>Clear Search</button>
+        {searchTerm
+        ? <button className="filter-button" onClick={this.clearSearch}>Clear Search</button>
+        : ''}
       </form>
     </div>
     )

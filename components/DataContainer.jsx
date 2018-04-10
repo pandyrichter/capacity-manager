@@ -1,20 +1,20 @@
 import React from 'react';
 import axios from 'axios';
-import api from '../helpers/api';
-import Airtable from 'airtable';
+import config from '../config';
 import TeamBlock from './TeamBlock';
 import ProjectDetail from './ProjectDetail';
-import config from '../config';
 
 class DataContainer extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
       projectsLoading: true,
-      projects: []
+      projects: [],
+      activeTeam: ''
     };
 
     this.checkForBatch = this.checkForBatch.bind(this);
+    this.handleTeamChange = this.handleTeamChange.bind(this);
   };
 
   componentDidMount() {
@@ -56,10 +56,24 @@ class DataContainer extends React.Component {
     }
   };
 
+  handleTeamChange(o) {
+    this.setState({activeTeam: o});
+  };
+
+  filterProjectsByTeam(projects, str) {
+    if (str === '') {
+      return projects;
+    } else {
+      return projects.filter(p => {
+        return p.fields["Office Submitted"] && p.fields["Office Submitted"].includes(str);
+      });
+    }
+  };
+
   filterProjectsByStr(projects, prop, str) {
-    return projects.filter(project => {
+    return projects.filter(p => {
       // some props are arrays, so therefore need to .some > .includes
-      return project.fields[prop].toLowerCase().includes(str.toLowerCase());
+      return p.fields[prop].toLowerCase().includes(str.toLowerCase());
     });
   };
 
@@ -96,13 +110,13 @@ class DataContainer extends React.Component {
   render() {
     const teams = ["Boulder", "Chicago", "Dallas", "Latin America"];
     const projects = this.state.projects;
-    const searchedProjects = this.filterProjectsByStr(projects, "Project Name", this.props.searchTerm);
+    const teamProjects = this.filterProjectsByTeam(projects, this.state.activeTeam);
+    const searchedProjects = this.filterProjectsByStr(teamProjects, "Project Name", this.props.searchTerm);
     const filteredProjects = this.filterProjectsByStatus(searchedProjects, this.props.filterParam);
     const sortedProjects = this.sortProjectsByProp(filteredProjects, "Project Name");
 
     return (
       <div>
-        <p>Total: {projects.length}</p>
         {this.state.projectsLoading
          ? <div className="data-container">
             <p>Loading</p>
@@ -111,7 +125,15 @@ class DataContainer extends React.Component {
               <div className="graphs-detail">
                 {teams.map(team => {
                   const teamProjects = projects.filter(project => project.fields["Office Submitted"] && project.fields["Office Submitted"].includes(team));
-                  return <TeamBlock key={team} office={team} projects={teamProjects} />
+                  return (
+                  <TeamBlock 
+                    key={team} 
+                    team={team} 
+                    projects={teamProjects}
+                    activeteam={team === this.state.activeTeam} 
+                    onTeamChange={this.handleTeamChange}
+                    />
+                  );
                 })}
               </div>
               <div className="projects-detail">
