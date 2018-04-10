@@ -48,12 +48,7 @@ class DataContainer extends React.Component {
 
   checkForOffset(offset) {
     // offset indicates additional records in Airtable
-    if (offset) {
-      // load next batch
-      this.checkForBatch(`?offset=${offset}`)
-    } else {
-      this.setState({projectsLoading: false});
-    }
+    offset ? this.checkForBatch(`?offset=${offset}`) : this.setState({projectsLoading: false});
   };
 
   handleTeamChange(o) {
