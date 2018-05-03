@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -15,12 +15,15 @@
     "chart.js": "^2.7.2",
     "lodash": "^4.17.5",
     "material-ui": "^1.0.0-beta.40",
+    "prop-types": "^15.6.1",
     "react": "^16.2.0",
+    "react-chartjs": "^1.2.0",
     "react-dom": "^16.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1"
+    "babel-preset-react": "^6.24.1",
+    "jest": "^22.4.3"
   }
 }

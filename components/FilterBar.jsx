@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class FilterBar extends React.Component {
   constructor (props) {
@@ -67,5 +68,10 @@ class FilterBar extends React.Component {
     )
   };
 };
+
+FilterBar.propTypes = {
+  searchTerm: PropTypes.string,
+  filterParam: PropTypes.string
+}
 
 module.exports = FilterBar;

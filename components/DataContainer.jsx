@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import config from '../config';
 import TeamBlock from './TeamBlock';
@@ -159,5 +160,10 @@ class DataContainer extends React.Component {
     )
   };
 };
+
+DataContainer.propTypes = {
+  searchTerm: PropTypes.string,
+  filterParam: PropTypes.string
+}
 
 module.exports = DataContainer;
