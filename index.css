@@ -1,17 +1,19 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700");
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-weight: 400;
-}
-
-.container {
-  margin: 0 auto;
-  width: 1200px;
 }
 
 ul {
   list-style: none;
+}
+
+/* Utility Classes */
+
+.container {
+  margin: 0 auto;
+  width: 85%;
 }
 
 .nav {
@@ -20,19 +22,32 @@ ul {
   justify-content: space-between;
 }
 
+.vr {
+  border-right: 1px solid lightgray;
+  height: 50px;
+  margin: 0px 5px;
+}
+
+/* Component Classes */
+
 .filter-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 0px;
   border-top: 1px solid lightgray;
   border-bottom: 1px solid lightgray;
+  margin-bottom: 15px;
+  padding: 10px 0px;
 }
 
 .filter-button-wrapper {
   display: flex;
   max-width: 80%;
   align-items: center;
+}
+
+.filter-button {
+  width: 125px;
 }
 
 .filter-bar input {
@@ -51,6 +66,22 @@ button.filter-button {
   margin: 0px 8px;
 }
 
+.content-grid {
+  display: grid;
+  grid-template-areas:
+    "visuals visuals projects"
+    "visuals visuals projects"
+    "teams teams projects";
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr auto;
+}
+
+.team-notification {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: salmon;
+}
+
 .data-container {
   border: 1px solid lightgray;
   border-radius: 5px;
@@ -59,8 +90,15 @@ button.filter-button {
   max-height: 600px;
 }
 
-.graphs-detail {
+.visuals-detail {
+  grid-area: visuals;
+  background-color: lightpink;
+}
+
+.teams-detail {
   display: flex;
+  grid-area: teams;
+  background-color: lightgreen;
 }
 
 .team-block {
@@ -72,7 +110,10 @@ button.filter-button {
 }
 
 .projects-detail {
-  max-height: 100%;
+  height: 75vh;
+  grid-area: projects;
+  background-color: lightblue;
+  padding: 20px;
 }
 
 .projects-detail__overflow {
@@ -80,10 +121,12 @@ button.filter-button {
   overflow-y: scroll;
 }
 
+/* Projects currently use Material components */
 .project-detail {
   border: 1px solid green;
   border-radius: 2px;
   margin-bottom: 5px;
   padding: 4px;
   display: none;
+  width: 80%;
 }
