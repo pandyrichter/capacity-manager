@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
-import config from "../config";
 import TeamBlock from "./TeamBlock";
 import ProjectDetail from "./ProjectDetail";
+
+import DataCall from '../helpers/data';
 
 class DataContainer extends React.Component {
   constructor(props) {
@@ -14,47 +14,13 @@ class DataContainer extends React.Component {
       activeTeam: ""
     };
 
-    this.checkForBatch = this.checkForBatch.bind(this);
     this.handleTeamChange = this.handleTeamChange.bind(this);
   }
 
   componentDidMount() {
-    this.checkForBatch();
-  }
-
-  /* 
-  LOAD DATA
-  1 Load initial batch from Airtable
-  2 Save records from inital batch to state
-  3 If batch contains offset:
-    Load records using offset in params
-    Save records to state
-  4 If batch doesnt contain offset:
-    Stop
-  */
-
-  checkForBatch(offset = "") {
-    let self = this;
-    const apiUrl = `${config.api}${offset}`;
-    const apiAuth = `${config.key}`;
-
-    axios
-      .get(apiUrl, {
-        headers: { Authorization: apiAuth }
-      })
-      .then(res => {
-        self.setState({
-          projects: [...self.state.projects, ...res.data.records]
-        });
-        self.checkForOffset(res.data.offset);
-      });
-  }
-
-  checkForOffset(offset) {
-    // offset indicates additional records in Airtable
-    offset
-      ? this.checkForBatch(`?offset=${offset}`)
-      : this.setState({ projectsLoading: false });
+    // run checkForBatch from helper
+    // once complete, setState via spread
+    DataCall.checkForBatch();
   }
 
   /* 
