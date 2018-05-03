@@ -22,6 +22,7 @@ class DataContainer extends React.Component {
   };
 
   /* 
+  LOAD DATA
   1 Load initial batch from Airtable
   2 Save records from inital batch to state
   3 If batch contains offset:
@@ -51,6 +52,10 @@ class DataContainer extends React.Component {
     offset ? this.checkForBatch(`?offset=${offset}`) : this.setState({projectsLoading: false});
   };
 
+  /* 
+  HANDLE DATA FILTERING AND SEARCH
+  */
+
   handleTeamChange(o) {
     this.setState({activeTeam: o});
   };
@@ -67,8 +72,12 @@ class DataContainer extends React.Component {
 
   filterProjectsByStr(projects, prop, str) {
     return projects.filter(p => {
-      // some props are arrays, so therefore need to .some > .includes
-      return p.fields[prop].toLowerCase().includes(str.toLowerCase());
+      // FIXME: some props are arrays, so therefore need to .some > .includes
+      try {
+        return p.fields[prop].toLowerCase().includes(str.toLowerCase());
+      } catch(e) {
+        console.error(e);
+      }
     });
   };
 
@@ -112,6 +121,11 @@ class DataContainer extends React.Component {
 
     return (
       <div>
+        <div className="team-notification">{
+          !this.state.activeTeam
+          ? <p>All Teams</p>
+          : <p>{this.state.activeTeam}</p>
+        }</div>
         {this.state.projectsLoading
          ? <div className="data-container">
             <p>Loading</p>
@@ -125,7 +139,7 @@ class DataContainer extends React.Component {
                     key={team} 
                     team={team} 
                     projects={teamProjects}
-                    activeteam={team === this.state.activeTeam} 
+                    activeteam={team === this.state.activeTeam}
                     onTeamChange={this.handleTeamChange}
                     />
                   );
