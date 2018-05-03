@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import Chart from 'chart.js';
 import ProjectDetail from './ProjectDetail';
+import utils from '../helpers/utils';
+
+const BarChart = require('react-chartjs').Bar;
 
 class TeamBlock extends React.Component {
   constructor(props) {
@@ -38,14 +41,9 @@ class TeamBlock extends React.Component {
     });
   };
 
-  calcPerc(num, den) {
-    let calc = num / den;
-    let f = calc * 100;
-    let fixed = Number.parseFloat(f).toFixed(2);
-    return (`${fixed}%`)
-  };
-
  render() {
+    const calcPerc = utils.calcPerc;
+    
     const projects = this.props.projects;
     const projectCount = projects.length;
 
@@ -53,11 +51,11 @@ class TeamBlock extends React.Component {
 
     const activeStyle = {
       border: '2px solid lightblue',
-      backgroundColor: 'lightgray'
+      backgroundColor: 'lightgray',
     };
 
     const inactiveStyle = {
-      border: '2px solid lightgray'
+      border: '2px solid lightgray',
     };
 
     return (
@@ -67,22 +65,25 @@ class TeamBlock extends React.Component {
         style={this.props.activeteam ? activeStyle : inactiveStyle }
         >
         <h3>{this.props.team}</h3>
+        {/* {this.state.statusCalc
+        ? <p>Chart Loading</p>
+        : <BarChart data={statusData} />} */}
         <div className="team-graph__detail">
           <p>Total: {projects.length}</p>
           {this.state.statusCalc
           ? <p><strong>Loading Report</strong></p>
           : <p>
-            Open: {status['undefined'].length} | {this.calcPerc((status['undefined'].length), (projectCount))}
+            Open: {status['undefined'].length} | {calcPerc((status['undefined'].length), (projectCount))}
             <br/>
-            On Hold: {status['On Hold'].length} | {this.calcPerc((status['On Hold'].length), (projectCount))}
+            On Hold: {status['On Hold'].length} | {calcPerc((status['On Hold'].length), (projectCount))}
             <br/>
-            Contract Negotiation: {status['Contract Negotiation'].length} | {this.calcPerc((status['Contract Negotiation'].length), (projectCount))}
+            Contract Negotiation: {status['Contract Negotiation'].length} | {calcPerc((status['Contract Negotiation'].length), (projectCount))}
             <br/>
-            Closed: {status['Closed Won'].length + status['Closed Lost'].length} | {this.calcPerc((status['Closed Won'].length + status['Closed Lost'].length), (projectCount))}              
+            Closed: {status['Closed Won'].length + status['Closed Lost'].length} | {calcPerc((status['Closed Won'].length + status['Closed Lost'].length), (projectCount))}              
             <br/>
-            Win Rate: {this.calcPerc((status['Closed Won'].length), (projectCount))}
+            Win Rate: {calcPerc((status['Closed Won'].length), (projectCount))}
             <br/> 
-            Lose Rate: {this.calcPerc((status['Closed Lost'].length), (projectCount))}
+            Lose Rate: {calcPerc((status['Closed Lost'].length), (projectCount))}
             </p>}
         </div>
       </div>
