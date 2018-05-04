@@ -20,7 +20,7 @@ class DataContainer extends React.Component {
   componentDidMount() {
     // run checkForBatch from helper
     // once complete, setState via spread
-    DataCall.checkForBatch();
+    DataCall.loadProjectsFromAirtable();
   }
 
   /* 

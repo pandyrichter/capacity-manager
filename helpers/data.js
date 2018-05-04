@@ -13,29 +13,36 @@ LOAD DATA
 */
 
 // TODO: Replace projects - this is placeholder for state only
-let projects = []
+async function loadProjectsFromAirtable() {
+  console.log('Calling Airtable');
+  let firstBatch = await checkForBatch();
+  console.log('First batch:', firstBatch);
+}
+
+// each offset requires a call back to Airtable
+// can't run a forEach/map because number of offsets is unknown
+// need to return the batch and indicate whether an offset exists
 
 function checkForBatch(offset = "") {
-const apiUrl = `${config.api}${offset}`;
-const apiAuth = `${config.key}`;
+  const apiUrl = `${config.api}${offset}`;
+  const apiAuth = `${config.key}`;
 
-axios
-  .get(apiUrl, {
-    headers: { Authorization: apiAuth }
-  })
-  .then(res => {
-    let batchrecords = res.data.records;
-    projects = [...projects, ...batchrecords];
-    console.log(projects);
-    checkForOffset(res.data.offset);
-  });
+  axios
+    .get(apiUrl, {
+      headers: { Authorization: apiAuth }
+    })
+    .then(res => {
+      let batchrecords = res.data.records;
+      return batchrecords;
+      // checkForOffset(res.data.offset);
+    });
 }
 
 function checkForOffset(offset) {
-// offset indicates additional records in Airtable
-offset
-  ? checkForBatch(`?offset=${offset}`)
-  : console.log("No more offsets");
+  // offset indicates additional records in Airtable
+  offset
+    ? checkForBatch(`?offset=${offset}`)
+    : console.log("No more offsets");
 }
 
-module.exports = { checkForBatch };
+module.exports = { loadProjectsFromAirtable, checkForBatch };
