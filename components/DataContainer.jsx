@@ -120,7 +120,7 @@ class DataContainer extends React.Component {
             <div className="teams-detail">
               {/* Teams */}
               {teams.map(team => {
-                const teamProjects = projects.filter(
+                const tprojects = projects.filter(
                   project =>
                     project.fields["Office Submitted"] &&
                     project.fields["Office Submitted"].includes(team)
@@ -129,7 +129,7 @@ class DataContainer extends React.Component {
                   <TeamBlock
                     key={team}
                     team={team}
-                    projects={teamProjects}
+                    projects={tprojects}
                     activeteam={team === this.state.activeTeam}
                     onTeamChange={this.handleTeamChange}
                   />

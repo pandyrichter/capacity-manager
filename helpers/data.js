@@ -13,7 +13,7 @@ LOAD DATA
 */
 
 // TODO: Replace projects - this is placeholder for state only
-async function loadProjectsFromAirtable() {
+async function loadProjectsFromAirtable () {
   console.log('Calling Airtable');
   let firstBatch = await checkForBatch();
   console.log('First batch:', firstBatch);
@@ -27,22 +27,22 @@ function checkForBatch(offset = "") {
   const apiUrl = `${config.api}${offset}`;
   const apiAuth = `${config.key}`;
 
-  axios
+  return axios
     .get(apiUrl, {
       headers: { Authorization: apiAuth }
     })
     .then(res => {
       let batchrecords = res.data.records;
+      console.log(batchrecords);
       return batchrecords;
-      // checkForOffset(res.data.offset);
     });
 }
 
-function checkForOffset(offset) {
-  // offset indicates additional records in Airtable
-  offset
-    ? checkForBatch(`?offset=${offset}`)
-    : console.log("No more offsets");
-}
+// function checkForOffset(offset) {
+//   // offset indicates additional records in Airtable
+//   offset
+//     ? checkForBatch(`?offset=${offset}`)
+//     : console.log("No more offsets");
+// }
 
 module.exports = { loadProjectsFromAirtable, checkForBatch };
