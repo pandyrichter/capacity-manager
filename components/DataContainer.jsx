@@ -11,7 +11,6 @@ class DataContainer extends React.Component {
     this.state = {
       projectsLoading: true,
       projects: [],
-      testProjects: [],
       activeTeam: ""
     };
 
@@ -21,9 +20,9 @@ class DataContainer extends React.Component {
   componentDidMount() {
     let self = this;
     DataCall().then(res => {
-      console.log(res);
       self.setState({
-        testProjects: [...res]
+        projects: [...res],
+        projectsLoading: false
       });
     });
   };
@@ -42,8 +41,8 @@ class DataContainer extends React.Component {
     } else {
       return projects.filter(p => {
         return (
-          p.fields["Office Submitted"] &&
-          p.fields["Office Submitted"].includes(str)
+          p["Office Submitted"] &&
+          p["Office Submitted"].includes(str)
         );
       });
     }
@@ -53,7 +52,7 @@ class DataContainer extends React.Component {
     return projects.filter(p => {
       // FIXME: some props are arrays, so therefore need to .some > .includes
       try {
-        return p.fields[prop].toLowerCase().includes(str.toLowerCase());
+        return p[prop].toLowerCase().includes(str.toLowerCase());
       } catch (e) {
         console.error(e);
       }
@@ -63,14 +62,14 @@ class DataContainer extends React.Component {
   filterProjectsByStatus(projects, s) {
     switch (s) {
       case "Closed":
-        return projects.filter(p => p.fields["Status Update?"]);
+        return projects.filter(p => p["Status Update?"]);
       case "Outstanding":
-        return projects.filter(p => !p.fields["Status Update?"]);
+        return projects.filter(p => !p["Status Update?"]);
       // FIXME: Following cases were removed
       case "Assigned":
-        return projects.filter(p => p.fields["PM Submitted"]);
+        return projects.filter(p => p["PM Submitted"]);
       case "Unassigned":
-        return projects.filter(p => !p.fields["PM Submitted"]);
+        return projects.filter(p => !p["PM Submitted"]);
       default:
         return projects;
     }
@@ -78,8 +77,8 @@ class DataContainer extends React.Component {
 
   sortProjectsByProp(projects, prop) {
     return projects.sort((a, b) => {
-      let projA = a.fields[prop].toLowerCase();
-      let projB = b.fields[prop].toLowerCase();
+      let projA = a[prop].toLowerCase();
+      let projB = b[prop].toLowerCase();
 
       if (projA < projB) {
         return -1;
@@ -127,8 +126,8 @@ class DataContainer extends React.Component {
               {teams.map(team => {
                 const tprojects = projects.filter(
                   project =>
-                    project.fields["Office Submitted"] &&
-                    project.fields["Office Submitted"].includes(team)
+                    project["Office Submitted"] &&
+                    project["Office Submitted"].includes(team)
                 );
                 return (
                   <TeamBlock
@@ -150,7 +149,7 @@ class DataContainer extends React.Component {
                 {sortedProjects.map(project => {
                   return (
                     <ProjectDetail
-                      key={project.fields["Project Name"]}
+                      key={project["Project Name"]}
                       project={project}
                     />
                   );
