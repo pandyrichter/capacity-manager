@@ -11,6 +11,7 @@ class DataContainer extends React.Component {
     this.state = {
       projectsLoading: true,
       projects: [],
+      testProjects: [],
       activeTeam: ""
     };
 
@@ -18,10 +19,14 @@ class DataContainer extends React.Component {
   }
 
   componentDidMount() {
-    // run checkForBatch from helper
-    // once complete, setState via spread
-    DataCall();
-  }
+    let self = this;
+    DataCall().then(res => {
+      console.log(res);
+      self.setState({
+        testProjects: [...res]
+      });
+    });
+  };
 
   /* 
   HANDLE DATA FILTERING AND SEARCH

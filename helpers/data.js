@@ -1,7 +1,7 @@
 import config from "../config";
 import Airtable from "airtable";
 
-function callAirtableData() {
+function retrieveAirtableData() {
   Airtable.configure({
     endpointUrl: config.api,
     apiKey: config.key
@@ -11,20 +11,24 @@ function callAirtableData() {
 
   let projects = [];
 
-  base('Team Tracking').select({
-    view: "Main View"
-  }).eachPage(function page(records, fetchNextPage) {
-    // This function (`page`) will get called for each page of records.
+  return new Promise ((resolve, reject) => {
+      base('Team Tracking').select({
+        view: "Main View"
+      }).eachPage(function page(records, fetchNextPage) {
+        // This function (`page`) will get called for each page of records.
 
-    records.forEach(function(record) {
-        projects.push(record.fields);
+        records.forEach(function(record) {
+            projects.push(record.fields);
+        });
+
+        fetchNextPage();
+        
+      }, function done(err) {
+        if (err) { reject(err); return; }
+        console.log("No errors, returning projects...")
+        resolve(projects);
     });
-    fetchNextPage();
-    
-  }, function done(err) {
-    if (err) { console.error(err); return; }
-    return projects;
-});
-}
+  });
+};
 
-export default callAirtableData;
+export default retrieveAirtableData;
