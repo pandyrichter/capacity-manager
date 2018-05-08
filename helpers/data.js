@@ -1,29 +1,52 @@
 import axios from "axios";
 import config from "../config";
+import configAlt from "../config-alt";
+import Airtable from "airtable";
 
-/* 
-LOAD DATA
-1 Load initial batch from Airtable
-2 Save records from inital batch to projects array
-3 If batch contains offset:
-  Load records using offset in params
-  Save records to state
-4 If batch doesnt contain offset:
-  Stop
-*/
+function callAirtableLibrary() {
+  Airtable.configure({
+    endpointUrl: configAlt.api,
+    apiKey: configAlt.key
+  });
 
-// TODO: Replace projects - this is placeholder for state only
-async function loadProjectsFromAirtable () {
-  console.log('Calling Airtable');
-  let firstBatch = await checkForBatch();
-  console.log('First batch:', firstBatch);
+  const base = Airtable.base(configAlt.base);
+
+  let projects = [];
+
+  base('Team Tracking').select({
+    view: "Main View"
+  }).eachPage(function page(records, fetchNextPage) {
+    // This function (`page`) will get called for each page of records.
+
+    records.forEach(function(record) {
+        projects.push(record.fields);
+    });
+    fetchNextPage();
+    
+  }, function done(err) {
+    if (err) { console.error(err); return; }
+    return projects;
+});
 }
 
-// each offset requires a call back to Airtable
-// can't run a forEach/map because number of offsets is unknown
-// need to return the batch and indicate whether an offset exists
+function loadProjectsFromAirtable () {
+  loadNextBatch();
+}
 
-function checkForBatch(offset = "") {
+async function loadNextBatch() {
+  // this needs to be a recursive function...
+  let projects = [];
+  let firstBatch = await loadSingleBatch();
+  projects = [...projects, ...firstBatch.records];
+  
+  if (firstBatch.offset) {
+    let secondBatch = await loadSingleBatch(`?offset=${firstBatch.offset}`);
+    projects = [...projects, ...secondBatch.records];
+    console.log(projects);
+  }
+}
+
+function loadSingleBatch(offset = "") {
   const apiUrl = `${config.api}${offset}`;
   const apiAuth = `${config.key}`;
 
@@ -32,17 +55,23 @@ function checkForBatch(offset = "") {
       headers: { Authorization: apiAuth }
     })
     .then(res => {
-      let batchrecords = res.data.records;
-      console.log(batchrecords);
-      return batchrecords;
+      const batch = {
+        records: res.data.records,
+        offset: res.data.offset
+      }
+      return batch;
     });
 }
 
-// function checkForOffset(offset) {
-//   // offset indicates additional records in Airtable
-//   offset
-//     ? checkForBatch(`?offset=${offset}`)
-//     : console.log("No more offsets");
-// }
+function pushBatch(batch, arr) {
+  return arr = [...arr, ...batch]
+}
 
-module.exports = { loadProjectsFromAirtable, checkForBatch };
+function checkForOffset(offset, target) {
+  // offset indicates additional records in Airtable
+  offset
+    ? loadNextBatch(`?offset=${offset}`, target)
+    : "No offset";
+}
+
+export default loadProjectsFromAirtable;
