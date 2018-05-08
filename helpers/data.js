@@ -1,15 +1,13 @@
-import axios from "axios";
 import config from "../config";
-import configAlt from "../config-alt";
 import Airtable from "airtable";
 
-function callAirtableLibrary() {
+function callAirtableData() {
   Airtable.configure({
-    endpointUrl: configAlt.api,
-    apiKey: configAlt.key
+    endpointUrl: config.api,
+    apiKey: config.key
   });
 
-  const base = Airtable.base(configAlt.base);
+  const base = Airtable.base(config.base);
 
   let projects = [];
 
@@ -29,49 +27,4 @@ function callAirtableLibrary() {
 });
 }
 
-function loadProjectsFromAirtable () {
-  loadNextBatch();
-}
-
-async function loadNextBatch() {
-  // this needs to be a recursive function...
-  let projects = [];
-  let firstBatch = await loadSingleBatch();
-  projects = [...projects, ...firstBatch.records];
-  
-  if (firstBatch.offset) {
-    let secondBatch = await loadSingleBatch(`?offset=${firstBatch.offset}`);
-    projects = [...projects, ...secondBatch.records];
-    console.log(projects);
-  }
-}
-
-function loadSingleBatch(offset = "") {
-  const apiUrl = `${config.api}${offset}`;
-  const apiAuth = `${config.key}`;
-
-  return axios
-    .get(apiUrl, {
-      headers: { Authorization: apiAuth }
-    })
-    .then(res => {
-      const batch = {
-        records: res.data.records,
-        offset: res.data.offset
-      }
-      return batch;
-    });
-}
-
-function pushBatch(batch, arr) {
-  return arr = [...arr, ...batch]
-}
-
-function checkForOffset(offset, target) {
-  // offset indicates additional records in Airtable
-  offset
-    ? loadNextBatch(`?offset=${offset}`, target)
-    : "No offset";
-}
-
-export default loadProjectsFromAirtable;
+export default callAirtableData;
