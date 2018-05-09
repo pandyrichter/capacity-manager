@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import _ from "lodash";
 import TeamBlock from "./TeamBlock";
 import ProjectDetail from "./ProjectDetail";
 
@@ -30,6 +31,16 @@ class DataContainer extends React.Component {
   /* 
   HANDLE DATA FILTERING AND SEARCH
   */
+
+  groupProjectsByTeam(projects) {
+    return _.groupBy(projects, project => {
+      try {
+        return project["Team Submitted"];
+      } catch (e) {
+        return ("No team identified");
+      }
+    });
+  }
 
   handleTeamChange(o) {
     this.setState({ activeTeam: o });
@@ -91,8 +102,11 @@ class DataContainer extends React.Component {
   }
 
   render() {
-    const teams = ["Boulder", "Chicago", "Dallas", "Latin America"];
     const projects = this.state.projects;
+    
+    const groupedTeam = this.groupProjectsByTeam(projects);
+    const teams = Object.keys(groupedTeam);
+    console.log(teams);
     const teamProjects = this.filterProjectsByTeam(
       projects,
       this.state.activeTeam
@@ -120,7 +134,10 @@ class DataContainer extends React.Component {
         ) : (
           <div className="content-grid">
             {/* Visuals */}
-            <div className="visuals-detail">Visuals</div>
+            <div className="visuals-detail">
+            Visuals
+            {/* <div>{groupedTeam}</div> */}
+            </div>
             <div className="teams-detail">
               {/* Teams */}
               {teams.map(team => {

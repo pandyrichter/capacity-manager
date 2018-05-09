@@ -45,7 +45,7 @@ class TeamBlock extends React.Component {
     const calcPerc = utils.calcPerc;
     
     const projects = this.props.projects;
-    const projectCount = projects.length;
+    // const projectCount = projects.length;
 
     const status = this.state.statusGroups;
 
@@ -69,21 +69,21 @@ class TeamBlock extends React.Component {
         ? <p>Chart Loading</p>
         : <BarChart data={statusData} />} */}
         <div className="team-graph__detail">
-          <p>Total: {projects.length}</p>
+          {/* <p>Total: {projects.length}</p> */}
           {this.state.statusCalc
           ? <p><strong>Loading Report</strong></p>
           : <p>
-            Open: {status['undefined'].length} | {calcPerc((status['undefined'].length), (projectCount))}
+            {/* Open: {status['undefined'].length} | {calcPerc((status['undefined'].length), (projectCount))} */}
             <br/>
-            On Hold: {status['On Hold'].length} | {calcPerc((status['On Hold'].length), (projectCount))}
+            {/* On Hold: {status['On Hold'].length} | {calcPerc((status['On Hold'].length), (projectCount))} */}
             <br/>
-            Contract Negotiation: {status['Contract Negotiation'].length} | {calcPerc((status['Contract Negotiation'].length), (projectCount))}
+            {/* Contract Negotiation: {status['Contract Negotiation'].length} | {calcPerc((status['Contract Negotiation'].length), (projectCount))} */}
             <br/>
-            Closed: {status['Closed Won'].length + status['Closed Lost'].length} | {calcPerc((status['Closed Won'].length + status['Closed Lost'].length), (projectCount))}              
+            {/* Closed: {status['Closed Won'].length + status['Closed Lost'].length} | {calcPerc((status['Closed Won'].length + status['Closed Lost'].length), (projectCount))}               */}
             <br/>
-            Win Rate: {calcPerc((status['Closed Won'].length), (projectCount))}
+            {/* Win Rate: {calcPerc((status['Closed Won'].length), (projectCount))} */}
             <br/> 
-            Lose Rate: {calcPerc((status['Closed Lost'].length), (projectCount))}
+            {/* Lose Rate: {calcPerc((status['Closed Lost'].length), (projectCount))} */}
             </p>}
         </div>
       </div>
