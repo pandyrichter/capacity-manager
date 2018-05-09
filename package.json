@@ -10,8 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "airtable": "^0.5.2",
+    "airtable": "^0.5.3",
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "chart.js": "^2.7.2",
     "lodash": "^4.17.5",
     "material-ui": "^1.0.0-beta.40",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
+    "babel-plugin-transform-regenerator": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "jest": "^22.4.3"

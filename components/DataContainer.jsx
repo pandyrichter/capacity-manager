@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
-import config from "../config";
 import TeamBlock from "./TeamBlock";
 import ProjectDetail from "./ProjectDetail";
+
+import DataCall from '../helpers/data';
 
 class DataContainer extends React.Component {
   constructor(props) {
@@ -14,48 +14,18 @@ class DataContainer extends React.Component {
       activeTeam: ""
     };
 
-    this.checkForBatch = this.checkForBatch.bind(this);
     this.handleTeamChange = this.handleTeamChange.bind(this);
   }
 
   componentDidMount() {
-    this.checkForBatch();
-  }
-
-  /* 
-  LOAD DATA
-  1 Load initial batch from Airtable
-  2 Save records from inital batch to state
-  3 If batch contains offset:
-    Load records using offset in params
-    Save records to state
-  4 If batch doesnt contain offset:
-    Stop
-  */
-
-  checkForBatch(offset = "") {
     let self = this;
-    const apiUrl = `${config.api}${offset}`;
-    const apiAuth = `${config.key}`;
-
-    axios
-      .get(apiUrl, {
-        headers: { Authorization: apiAuth }
-      })
-      .then(res => {
-        self.setState({
-          projects: [...self.state.projects, ...res.data.records]
-        });
-        self.checkForOffset(res.data.offset);
+    DataCall().then(res => {
+      self.setState({
+        projects: [...res],
+        projectsLoading: false
       });
-  }
-
-  checkForOffset(offset) {
-    // offset indicates additional records in Airtable
-    offset
-      ? this.checkForBatch(`?offset=${offset}`)
-      : this.setState({ projectsLoading: false });
-  }
+    });
+  };
 
   /* 
   HANDLE DATA FILTERING AND SEARCH
@@ -71,8 +41,8 @@ class DataContainer extends React.Component {
     } else {
       return projects.filter(p => {
         return (
-          p.fields["Office Submitted"] &&
-          p.fields["Office Submitted"].includes(str)
+          p["Office Submitted"] &&
+          p["Office Submitted"].includes(str)
         );
       });
     }
@@ -82,7 +52,7 @@ class DataContainer extends React.Component {
     return projects.filter(p => {
       // FIXME: some props are arrays, so therefore need to .some > .includes
       try {
-        return p.fields[prop].toLowerCase().includes(str.toLowerCase());
+        return p[prop].toLowerCase().includes(str.toLowerCase());
       } catch (e) {
         console.error(e);
       }
@@ -92,14 +62,14 @@ class DataContainer extends React.Component {
   filterProjectsByStatus(projects, s) {
     switch (s) {
       case "Closed":
-        return projects.filter(p => p.fields["Status Update?"]);
+        return projects.filter(p => p["Status Update?"]);
       case "Outstanding":
-        return projects.filter(p => !p.fields["Status Update?"]);
+        return projects.filter(p => !p["Status Update?"]);
       // FIXME: Following cases were removed
       case "Assigned":
-        return projects.filter(p => p.fields["PM Submitted"]);
+        return projects.filter(p => p["PM Submitted"]);
       case "Unassigned":
-        return projects.filter(p => !p.fields["PM Submitted"]);
+        return projects.filter(p => !p["PM Submitted"]);
       default:
         return projects;
     }
@@ -107,8 +77,8 @@ class DataContainer extends React.Component {
 
   sortProjectsByProp(projects, prop) {
     return projects.sort((a, b) => {
-      let projA = a.fields[prop].toLowerCase();
-      let projB = b.fields[prop].toLowerCase();
+      let projA = a[prop].toLowerCase();
+      let projB = b[prop].toLowerCase();
 
       if (projA < projB) {
         return -1;
@@ -154,16 +124,16 @@ class DataContainer extends React.Component {
             <div className="teams-detail">
               {/* Teams */}
               {teams.map(team => {
-                const teamProjects = projects.filter(
+                const tprojects = projects.filter(
                   project =>
-                    project.fields["Office Submitted"] &&
-                    project.fields["Office Submitted"].includes(team)
+                    project["Office Submitted"] &&
+                    project["Office Submitted"].includes(team)
                 );
                 return (
                   <TeamBlock
                     key={team}
                     team={team}
-                    projects={teamProjects}
+                    projects={tprojects}
                     activeteam={team === this.state.activeTeam}
                     onTeamChange={this.handleTeamChange}
                   />
@@ -179,7 +149,7 @@ class DataContainer extends React.Component {
                 {sortedProjects.map(project => {
                   return (
                     <ProjectDetail
-                      key={project.fields["Project Name"]}
+                      key={project["Project Name"]}
                       project={project}
                     />
                   );

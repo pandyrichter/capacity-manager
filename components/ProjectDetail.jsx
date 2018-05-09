@@ -4,11 +4,11 @@ import Typography from 'material-ui/Typography';
 
 const ProjectDetail = (props) => {
   const project = {
-    name: props.project.fields["Project Name"],
-    projmgr: props.project.fields["PM Submitted"],
-    team: props.project.fields["Team Submitted"],
-    endDate: props.project.fields["Estimated Open Date"],
-    status: props.project.fields["Status Update?"]
+    name: props.project["Project Name"],
+    projmgr: props.project["PM Submitted"],
+    team: props.project["Team Submitted"],
+    endDate: props.project["Estimated Open Date"],
+    status: props.project["Status Update?"]
   };
 
   return (

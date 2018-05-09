@@ -37,7 +37,7 @@ class TeamBlock extends React.Component {
 
   groupProjectsByStatus(projects) {
     return _.groupBy(projects, project => {
-      return project.fields["Status Update?"];
+      return project["Status Update?"];
     });
   };
 
