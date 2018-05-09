@@ -25,7 +25,6 @@ function retrieveAirtableData() {
         
       }, function done(err) {
         if (err) { reject(err); return; }
-        console.log("No errors, returning projects...")
         resolve(projects);
     });
   });
