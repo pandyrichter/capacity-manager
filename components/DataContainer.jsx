@@ -33,12 +33,18 @@ class DataContainer extends React.Component {
   HANDLE DATA FILTERING AND SEARCH
   */
 
-  cleanProjectNames(projects) {
-    return projects.map(p => {
-      if (!p["Team Submitted"]) {
-        p["Team Submitted"] = "Unassigned";
+ cleanProjectNames(projects) {
+   return projects.map(p => {
+     if (!p["Team Submitted"]) {
+       p["Team Submitted"] = "Unassigned";
       }
       return p;
+    })
+  }
+  
+  pullOSEProjects(projects) {
+    return projects.filter(p => {
+      return p["OS&E"];
     })
   }
 
@@ -55,6 +61,8 @@ class DataContainer extends React.Component {
   filterProjectsByTeam(projects, str) {
     if (str === "") {
       return projects;
+    } else if (str === "Team OSE") {
+      return this.pullOSEProjects(projects);
     } else {
       return projects.filter(p => {
         return (
@@ -111,7 +119,10 @@ class DataContainer extends React.Component {
 
     const cleanProjects = this.cleanProjectNames(projects);
     const groupedTeams = this.groupByCat(cleanProjects, "Team Submitted");
-    
+
+    // Am I doing something redundant between this and teamProjects from filter?
+    const oseProjects = this.pullOSEProjects(cleanProjects);
+
     const teams = Object.keys(groupedTeams);
 
     const teamProjects = this.filterProjectsByTeam(
@@ -143,6 +154,7 @@ class DataContainer extends React.Component {
             {/* Visuals */}
             <div className="visuals-detail">
             Visuals
+            <h3>{!this.state.activeTeam ? "All Teams" : this.state.activeTeam}</h3>
             </div>
             <div className="teams-detail">
               {/* Teams */}
@@ -159,9 +171,19 @@ class DataContainer extends React.Component {
                     projects={tprojects}
                     activeteam={team === this.state.activeTeam}
                     onTeamChange={this.handleTeamChange}
+                    teamIsOSE={false}
                   />
                 );
               })}
+              {/* OSE */}
+              <TeamBlock 
+                key="OSE"
+                team="Team OSE"
+                projects={oseProjects}
+                activeteam={"Team OSE" === this.state.activeTeam}
+                onTeamChange={this.handleTeamChange}
+                teamIsOSE={true}
+              />
             </div>
             {/* Projects */}
             <div className="projects-detail">
