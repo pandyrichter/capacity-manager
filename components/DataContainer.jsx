@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import _ from "lodash";
+
 import TeamBlock from "./TeamBlock";
 import ProjectDetail from "./ProjectDetail";
 
@@ -31,9 +33,24 @@ class DataContainer extends React.Component {
   HANDLE DATA FILTERING AND SEARCH
   */
 
-  handleTeamChange(o) {
-    this.setState({ activeTeam: o });
+  cleanProjectNames(projects) {
+    return projects.map(p => {
+      if (!p["Team Submitted"]) {
+        p["Team Submitted"] = "Unassigned";
+      }
+      return p;
+    })
   }
+
+  groupByCat(records, cat) {
+    return _.groupBy(records, record => record[cat]);
+  }
+
+  handleTeamChange(t) {
+    this.setState({ activeTeam: t });
+  }
+
+  // Flowthrough of projects: By team > By Search > By Filter > Sorted
 
   filterProjectsByTeam(projects, str) {
     if (str === "") {
@@ -41,8 +58,8 @@ class DataContainer extends React.Component {
     } else {
       return projects.filter(p => {
         return (
-          p["Office Submitted"] &&
-          p["Office Submitted"].includes(str)
+          p["Team Submitted"] &&
+          p["Team Submitted"].includes(str)
         );
       });
     }
@@ -61,24 +78,23 @@ class DataContainer extends React.Component {
 
   filterProjectsByStatus(projects, s) {
     switch (s) {
-      case "Closed":
-        return projects.filter(p => p["Status Update?"]);
       case "Outstanding":
-        return projects.filter(p => !p["Status Update?"]);
-      // FIXME: Following cases were removed
-      case "Assigned":
-        return projects.filter(p => p["PM Submitted"]);
-      case "Unassigned":
-        return projects.filter(p => !p["PM Submitted"]);
+        return projects.filter(p => !p["Status Update"]);
+      case "Won":
+        return projects.filter(p => p["Status Update"] === "Closed Won");
+      case "Lost":
+        return projects.filter(p => p["Status Update"] === "Closed Lost");
+      case "Closed":
+        return projects.filter(p => p["Status Update"]);
       default:
         return projects;
     }
   }
 
-  sortProjectsByProp(projects, prop) {
+  sortProjectsByProp(projects, cat) {
     return projects.sort((a, b) => {
-      let projA = a[prop].toLowerCase();
-      let projB = b[prop].toLowerCase();
+      let projA = a[cat].toLowerCase();
+      let projB = b[cat].toLowerCase();
 
       if (projA < projB) {
         return -1;
@@ -91,10 +107,15 @@ class DataContainer extends React.Component {
   }
 
   render() {
-    const teams = ["Boulder", "Chicago", "Dallas", "Latin America"];
     const projects = this.state.projects;
+
+    const cleanProjects = this.cleanProjectNames(projects);
+    const groupedTeams = this.groupByCat(cleanProjects, "Team Submitted");
+    
+    const teams = Object.keys(groupedTeams);
+
     const teamProjects = this.filterProjectsByTeam(
-      projects,
+      cleanProjects,
       this.state.activeTeam
     );
     const searchedProjects = this.filterProjectsByStr(
@@ -120,14 +141,16 @@ class DataContainer extends React.Component {
         ) : (
           <div className="content-grid">
             {/* Visuals */}
-            <div className="visuals-detail">Visuals</div>
+            <div className="visuals-detail">
+            Visuals
+            </div>
             <div className="teams-detail">
               {/* Teams */}
               {teams.map(team => {
                 const tprojects = projects.filter(
                   project =>
-                    project["Office Submitted"] &&
-                    project["Office Submitted"].includes(team)
+                    project["Team Submitted"] &&
+                    project["Team Submitted"].includes(team)
                 );
                 return (
                   <TeamBlock
@@ -142,6 +165,7 @@ class DataContainer extends React.Component {
             </div>
             {/* Projects */}
             <div className="projects-detail">
+              <h3>{!this.state.activeTeam ? "All Teams" : this.state.activeTeam}</h3>
               <h5>
                 {this.props.filterParam} Projects: {sortedProjects.length}
               </h5>

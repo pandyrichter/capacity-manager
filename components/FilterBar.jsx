@@ -32,7 +32,7 @@ class FilterBar extends React.Component {
   }
 
   render() {
-    const filterTypes = ["Outstanding", "Open", "In Closing", "Closed"];
+    const filterTypes = ["Outstanding", "Won", "Lost", "Open", "In Closing", "Closed"];
     const searchTerm = this.props.searchTerm;
     const filterParam = this.props.filterParam;
 
