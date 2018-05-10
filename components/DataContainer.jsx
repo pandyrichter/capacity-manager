@@ -143,15 +143,14 @@ class DataContainer extends React.Component {
             {/* Visuals */}
             <div className="visuals-detail">
             Visuals
-            {/* <div>{groupedTeam}</div> */}
             </div>
             <div className="teams-detail">
               {/* Teams */}
               {teams.map(team => {
                 const tprojects = projects.filter(
                   project =>
-                    project["Office Submitted"] &&
-                    project["Office Submitted"].includes(team)
+                    project["Team Submitted"] &&
+                    project["Team Submitted"].includes(team)
                 );
                 return (
                   <TeamBlock
