@@ -93,16 +93,18 @@ button.filter-button {
 .visuals-detail {
   grid-area: visuals;
   background-color: lightpink;
+  padding: 20px;
 }
 
 .teams-detail {
   display: flex;
   grid-area: teams;
   background-color: lightgreen;
+  overflow-x: scroll;
 }
 
 .team-block {
-  width: 25%;
+  min-width: 250px;
   margin-right: 10px;
   padding: 10px;
   cursor: pointer;
