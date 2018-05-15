@@ -10,6 +10,7 @@ import DataCall from '../helpers/data';
 class DataContainer extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       projectsLoading: true,
       projects: [],
@@ -29,6 +30,11 @@ class DataContainer extends React.Component {
     });
   };
 
+  
+  handleTeamChange(t) {
+    this.setState({ activeTeam: t });
+  }
+  
   /* 
   HANDLE DATA FILTERING AND SEARCH
   */
@@ -50,10 +56,6 @@ class DataContainer extends React.Component {
 
   groupByCat(records, cat) {
     return _.groupBy(records, record => record[cat]);
-  }
-
-  handleTeamChange(t) {
-    this.setState({ activeTeam: t });
   }
 
   // Flowthrough of projects: By team > By Search > By Filter > Sorted
@@ -146,7 +148,7 @@ class DataContainer extends React.Component {
     return (
       <div>
         {this.state.projectsLoading ? (
-          <div className="data-container">
+          <div className="loading-container">
             <p>Loading</p>
           </div>
         ) : (
@@ -157,7 +159,7 @@ class DataContainer extends React.Component {
             <h3>{!this.state.activeTeam ? "All Teams" : this.state.activeTeam}</h3>
             </div>
             <div className="teams-detail">
-              {/* Teams */}
+              {/* FFE Teams */}
               {teams.map(team => {
                 const tprojects = projects.filter(
                   project =>
@@ -175,7 +177,7 @@ class DataContainer extends React.Component {
                   />
                 );
               })}
-              {/* OSE */}
+              {/* OSE Team */}
               <TeamBlock 
                 key="OSE"
                 team="Team OSE"

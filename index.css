@@ -67,6 +67,7 @@ button.filter-button {
 }
 
 .content-grid {
+  border: 1px solid lightgray;
   display: grid;
   grid-template-areas:
     "visuals visuals projects"
@@ -82,8 +83,8 @@ button.filter-button {
   background-color: salmon;
 }
 
-.data-container {
-  border: 1px solid lightgray;
+.loading-container {
+  border: 1px solid gray;
   border-radius: 5px;
   margin-top: 10px;
   padding: 20px;
@@ -92,7 +93,6 @@ button.filter-button {
 
 .visuals-detail {
   grid-area: visuals;
-  background-color: lightpink;
   padding: 20px;
 }
 
@@ -109,6 +109,19 @@ button.filter-button {
   padding: 10px;
   cursor: pointer;
   border-radius: 5px;
+}
+
+.user-chip {
+  background-color: gray;
+  box-shadow: 0px 1px 2px #333;
+  border-radius: 15px;
+  color: white;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+}
+
+.user-chip:hover {
+  background-color: lightseagreen;
 }
 
 .projects-detail {
