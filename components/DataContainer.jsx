@@ -22,11 +22,13 @@ class DataContainer extends React.Component {
   }
 
   componentDidMount() {
-    let self = this;
+    const self = this;
+    const routeTeam = this.props.routerLoc.pathname.substring(1);
     DataCall().then(res => {
       self.setState({
         projects: [...res],
-        projectsLoading: false
+        projectsLoading: false,
+        activeTeam: routeTeam
       });
     });
   };
@@ -59,9 +61,11 @@ class DataContainer extends React.Component {
     return _.groupBy(records, record => record[cat]);
   }
 
-  // Flowthrough of projects: By team > By Search > By Filter > Sorted
+  /*
+  Flowthrough of projects: By team > By Search > By Filter > Sorted
+  */
 
-  filterProjectsByTeam(projects, str) {
+  filterProjectsByTeam(projects, str=this.state.activeTeam) {
     if (str === "") {
       return projects;
     } else if (str === "Team OSE") {
@@ -130,7 +134,8 @@ class DataContainer extends React.Component {
 
     const teamProjects = this.filterProjectsByTeam(
       cleanProjects,
-      this.state.activeTeam
+      // FIXME: This won't work when you add PMs
+      this.props.routerLoc.pathname.substring(1)
     );
     const searchedProjects = this.filterProjectsByStr(
       teamProjects,
