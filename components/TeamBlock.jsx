@@ -89,6 +89,7 @@ class TeamBlock extends React.Component {
             key={pm}
             pm={pm}
             onPMChange={this.handlePMChange}
+            activepm={pm === this.state.activePM}
             />
           )
         })}
