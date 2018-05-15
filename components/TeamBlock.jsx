@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
@@ -22,8 +23,10 @@ class TeamBlock extends React.Component {
   handleTeamChange() {
     if (this.props.activeteam) {
       this.props.onTeamChange("");
+      this.props.routerHist.push(`/`)
     } else {
       this.props.onTeamChange(this.props.team);
+      this.props.routerHist.push(`/${this.props.team}`)
     }
   }
 

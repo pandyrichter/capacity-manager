@@ -159,8 +159,7 @@ class DataContainer extends React.Component {
             <div className="flex">All Teams {!this.state.activeTeam 
               ? "" 
               : <div className="flex">
-                  <span> > </span>
-                  <Link to={`/${this.state.activeTeam}`} >{this.state.activeTeam}</Link>
+                  <div>{this.props.routerLoc.pathname}</div>
                 </div>}
             </div>
             </div>
@@ -180,6 +179,7 @@ class DataContainer extends React.Component {
                     activeteam={team === this.state.activeTeam}
                     onTeamChange={this.handleTeamChange}
                     teamIsOSE={false}
+                    routerHist={this.props.routerHist}
                   />
                 );
               })}
@@ -190,6 +190,7 @@ class DataContainer extends React.Component {
                 activeteam={"Team OSE" === this.state.activeTeam}
                 onTeamChange={this.handleTeamChange}
                 teamIsOSE={true}
+                routerHist={this.props.routerHist}
               />
             </div>
             {/* Projects */}
