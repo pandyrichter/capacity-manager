@@ -1,4 +1,5 @@
 import React from "react";
+import { Route, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
@@ -34,7 +35,7 @@ class DataContainer extends React.Component {
   handleTeamChange(t) {
     this.setState({ activeTeam: t });
   }
-  
+
   /* 
   HANDLE DATA FILTERING AND SEARCH
   */
@@ -155,8 +156,13 @@ class DataContainer extends React.Component {
           <div className="content-grid">
             {/* Visuals */}
             <div className="visuals-detail">
-            Visuals
-            <h3>{!this.state.activeTeam ? "All Teams" : this.state.activeTeam}</h3>
+            <div className="flex">All Teams {!this.state.activeTeam 
+              ? "" 
+              : <div className="flex">
+                  <span> > </span>
+                  <Link to={`/${this.state.activeTeam}`} >{this.state.activeTeam}</Link>
+                </div>}
+            </div>
             </div>
             <div className="teams-detail">
               {/* FFE Teams */}
@@ -179,7 +185,6 @@ class DataContainer extends React.Component {
               })}
               {/* OSE Team */}
               <TeamBlock 
-                key="OSE"
                 team="Team OSE"
                 projects={oseProjects}
                 activeteam={"Team OSE" === this.state.activeTeam}

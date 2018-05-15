@@ -68,7 +68,7 @@ class TeamBlock extends React.Component {
     // Styles for selected Teams
     const activeStyle = {
       border: "2px solid lightblue",
-      backgroundColor: "lightgray"
+      backgroundColor: "lightgreen"
     };
 
     const inactiveStyle = {
