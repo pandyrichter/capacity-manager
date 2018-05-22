@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 class FilterBar extends React.Component {
@@ -19,7 +20,9 @@ class FilterBar extends React.Component {
     this.props.onSearchTermChange("");
   }
 
+  // TODO: This can be removed before pull request
   handleFilterChange(event) {
+    const self = this;
     if (event.target.value === this.props.filterParam) {
       this.props.onFilterChange("");
     } else {
@@ -32,9 +35,10 @@ class FilterBar extends React.Component {
   }
 
   render() {
+    const { match } = this.props;
+
     const filterTypes = ["Outstanding", "Won", "Lost", "Open", "In Closing", "Closed"];
     const searchTerm = this.props.searchTerm;
-    const filterParam = this.props.filterParam;
 
     const activeStyle = {
       backgroundColor: "lightblue"
@@ -50,15 +54,12 @@ class FilterBar extends React.Component {
           <h2>Filter:</h2>
           {filterTypes.map(filter => {
             return (
-              <button
-                key={filter}
-                onClick={this.handleFilterChange}
-                value={filter}
-                className="filter-button"
-                style={filterParam === filter ? activeStyle : inactiveStyle}
-              >
-                {filter}
-              </button>
+              <Link 
+                key={filter} 
+                to={{
+                  pathname: match.path.url,
+                  search: `?filter=${filter}`
+                }}>{filter}</Link>
             );
           })}
         </div>
@@ -84,7 +85,6 @@ class FilterBar extends React.Component {
 
 FilterBar.propTypes = {
   searchTerm: PropTypes.string,
-  filterParam: PropTypes.string
 };
 
 module.exports = FilterBar;
