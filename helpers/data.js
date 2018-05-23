@@ -12,7 +12,7 @@ function fetchProjectRecords() {
   let projects = [];
 
   return new Promise ((resolve, reject) => {
-      base('Team Tracking').select({
+      base('Project Tracking').select({
         view: "Main View"
       }).eachPage(function page(records, fetchNextPage) {
         // This function (`page`) will get called for each page of records.

@@ -36,7 +36,6 @@ class App extends React.Component {
       <Router>
         <div className="container">
           <NavBar />
-          {/* <Route path="/" component={DataContainer} /> */}
           <Switch>
             <Route path="/settings" component={Settings} />
             <Route path="/:teamName" component={Dashboard} />

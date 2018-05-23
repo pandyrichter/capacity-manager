@@ -2,9 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
+import queryString from "query-string";
+
 class FilterBar extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      activeFilter: ''
+    };
 
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleFilterChange = this.handleFilterChange.bind(this);
@@ -20,13 +26,18 @@ class FilterBar extends React.Component {
     this.props.onSearchTermChange("");
   }
 
-  // TODO: This can be removed before pull request
   handleFilterChange(event) {
-    const self = this;
-    if (event.target.value === this.props.filterParam) {
-      this.props.onFilterChange("");
+    const { filter } = queryString.parse(this.props.location.search)
+    if (filter === event.target.value) {
+      this.props.history.push({
+        pathname: this.props.match.url,
+        search: ``
+      });
     } else {
-      this.props.onFilterChange(event.target.value);
+      this.props.history.push({
+        pathname: this.props.match.url,
+        search: `?filter=${event.target.value}`
+      });
     }
   }
 
@@ -35,9 +46,10 @@ class FilterBar extends React.Component {
   }
 
   render() {
-    const { match } = this.props;
+    const { match, activeFilter } = this.props;
 
     const filterTypes = ["Outstanding", "Won", "Lost", "Open", "In Closing", "Closed"];
+
     const searchTerm = this.props.searchTerm;
 
     const activeStyle = {
@@ -54,12 +66,14 @@ class FilterBar extends React.Component {
           <h2>Filter:</h2>
           {filterTypes.map(filter => {
             return (
-              <Link 
-                key={filter} 
-                to={{
-                  pathname: match.path.url,
-                  search: `?filter=${filter}`
-                }}>{filter}</Link>
+              <button
+              key={filter}
+              onClick={this.handleFilterChange}
+              value={filter}
+              className="filter-button"
+              style={filter === this.state.activeFilter ? activeStyle : inactiveStyle }
+              >{filter}
+              </button>
             );
           })}
         </div>
@@ -85,6 +99,7 @@ class FilterBar extends React.Component {
 
 FilterBar.propTypes = {
   searchTerm: PropTypes.string,
+  activeFilter: PropTypes.string
 };
 
 module.exports = FilterBar;

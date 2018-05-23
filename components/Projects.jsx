@@ -1,6 +1,8 @@
 import React from "react";
 import queryString from "query-string";
 
+import ProjectDetail from "./ProjectDetail";
+
 // Replace this with call to Airtable
 function filterProjectsbyTeam(ps, team="") {
   if (team === "bw") {
@@ -42,10 +44,9 @@ export default function Projects (props) {
 
   return (
     <div>
-      <h2>Projects!</h2>
-      <p>Filter: {filter}</p>
+      <h2>{filter ? `${filter} Projects` : `All Projects`}</h2>
       <ul>
-        {filteredProjects.map((p, id) => <li key={id}>{p["Project Name"]}</li>)}
+        {filteredProjects.map((p, id) => <ProjectDetail key={id} project={p} /> )}
       </ul>
     </div>
   )
