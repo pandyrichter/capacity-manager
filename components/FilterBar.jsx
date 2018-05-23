@@ -1,9 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+
+import queryString from "query-string";
 
 class FilterBar extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      activeFilter: ''
+    };
 
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleFilterChange = this.handleFilterChange.bind(this);
@@ -20,10 +27,17 @@ class FilterBar extends React.Component {
   }
 
   handleFilterChange(event) {
-    if (event.target.value === this.props.filterParam) {
-      this.props.onFilterChange("");
+    const { filter } = queryString.parse(this.props.location.search)
+    if (filter === event.target.value) {
+      this.props.history.push({
+        pathname: this.props.match.url,
+        search: ``
+      });
     } else {
-      this.props.onFilterChange(event.target.value);
+      this.props.history.push({
+        pathname: this.props.match.url,
+        search: `?filter=${event.target.value}`
+      });
     }
   }
 
@@ -32,9 +46,11 @@ class FilterBar extends React.Component {
   }
 
   render() {
+    const { match, activeFilter } = this.props;
+
     const filterTypes = ["Outstanding", "Won", "Lost", "Open", "In Closing", "Closed"];
+
     const searchTerm = this.props.searchTerm;
-    const filterParam = this.props.filterParam;
 
     const activeStyle = {
       backgroundColor: "lightblue"
@@ -51,13 +67,12 @@ class FilterBar extends React.Component {
           {filterTypes.map(filter => {
             return (
               <button
-                key={filter}
-                onClick={this.handleFilterChange}
-                value={filter}
-                className="filter-button"
-                style={filterParam === filter ? activeStyle : inactiveStyle}
-              >
-                {filter}
+              key={filter}
+              onClick={this.handleFilterChange}
+              value={filter}
+              className="filter-button"
+              style={filter === this.state.activeFilter ? activeStyle : inactiveStyle }
+              >{filter}
               </button>
             );
           })}
@@ -84,7 +99,7 @@ class FilterBar extends React.Component {
 
 FilterBar.propTypes = {
   searchTerm: PropTypes.string,
-  filterParam: PropTypes.string
+  activeFilter: PropTypes.string
 };
 
 module.exports = FilterBar;

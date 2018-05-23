@@ -1,6 +1,15 @@
 import React from "react";
+import { 
+  Route, 
+  Redirect,
+  Switch,
+  BrowserRouter as Router } from "react-router-dom";
+
+import NavBar from "./NavBar";
 import FilterBar from "./FilterBar";
 import DataContainer from "./DataContainer";
+import Dashboard from "./Dashboard";
+import Settings from "./Settings";
 
 class App extends React.Component {
   constructor() {
@@ -24,24 +33,15 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="nav">
-          <h1>Capacity Manager</h1>
-          <ul>
-            <li>Notifications</li>
-          </ul>
+      <Router>
+        <div className="container">
+          <NavBar />
+          <Switch>
+            <Route path="/settings" component={Settings} />
+            <Route path="/:teamName" component={Dashboard} />
+          </Switch>
         </div>
-        <FilterBar
-          searchTerm={this.state.searchTerm}
-          filterParam={this.state.filterParam}
-          onSearchTermChange={this.handleSearchTermChange}
-          onFilterChange={this.handleFilterParamChange}
-        />
-        <DataContainer
-          searchTerm={this.state.searchTerm}
-          filterParam={this.state.filterParam}
-        />
-      </div>
+      </Router>
     );
   }
 }

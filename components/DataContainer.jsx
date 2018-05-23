@@ -1,4 +1,5 @@
 import React from "react";
+import { Route, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
@@ -21,11 +22,13 @@ class DataContainer extends React.Component {
   }
 
   componentDidMount() {
-    let self = this;
+    const self = this;
+    const routeTeam = this.props.routerLoc.pathname.substring(1);
     DataCall().then(res => {
       self.setState({
         projects: [...res],
-        projectsLoading: false
+        projectsLoading: false,
+        activeTeam: routeTeam
       });
     });
   };
@@ -34,7 +37,7 @@ class DataContainer extends React.Component {
   handleTeamChange(t) {
     this.setState({ activeTeam: t });
   }
-  
+
   /* 
   HANDLE DATA FILTERING AND SEARCH
   */
@@ -58,9 +61,11 @@ class DataContainer extends React.Component {
     return _.groupBy(records, record => record[cat]);
   }
 
-  // Flowthrough of projects: By team > By Search > By Filter > Sorted
+  /*
+  Flowthrough of projects: By team > By Search > By Filter > Sorted
+  */
 
-  filterProjectsByTeam(projects, str) {
+  filterProjectsByTeam(projects, str=this.state.activeTeam) {
     if (str === "") {
       return projects;
     } else if (str === "Team OSE") {
@@ -129,7 +134,8 @@ class DataContainer extends React.Component {
 
     const teamProjects = this.filterProjectsByTeam(
       cleanProjects,
-      this.state.activeTeam
+      // FIXME: This won't work when you add PMs
+      this.props.routerLoc.pathname.substring(1)
     );
     const searchedProjects = this.filterProjectsByStr(
       teamProjects,
@@ -155,8 +161,12 @@ class DataContainer extends React.Component {
           <div className="content-grid">
             {/* Visuals */}
             <div className="visuals-detail">
-            Visuals
-            <h3>{!this.state.activeTeam ? "All Teams" : this.state.activeTeam}</h3>
+            <div className="flex">All Teams {!this.state.activeTeam 
+              ? "" 
+              : <div className="flex">
+                  <div>{this.props.routerLoc.pathname}</div>
+                </div>}
+            </div>
             </div>
             <div className="teams-detail">
               {/* FFE Teams */}
@@ -174,17 +184,18 @@ class DataContainer extends React.Component {
                     activeteam={team === this.state.activeTeam}
                     onTeamChange={this.handleTeamChange}
                     teamIsOSE={false}
+                    routerHist={this.props.routerHist}
                   />
                 );
               })}
               {/* OSE Team */}
               <TeamBlock 
-                key="OSE"
                 team="Team OSE"
                 projects={oseProjects}
                 activeteam={"Team OSE" === this.state.activeTeam}
                 onTeamChange={this.handleTeamChange}
                 teamIsOSE={true}
+                routerHist={this.props.routerHist}
               />
             </div>
             {/* Projects */}

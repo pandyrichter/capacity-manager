@@ -9,6 +9,10 @@ ul {
   list-style: none;
 }
 
+h1 h2 h3 h4 h5 h6 {
+  margin: 0px;
+}
+
 /* Utility Classes */
 
 .container {
@@ -26,6 +30,14 @@ ul {
   border-right: 1px solid lightgray;
   height: 50px;
   margin: 0px 5px;
+}
+
+.flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: CENTER;
+  justify-content: space-between;
 }
 
 /* Component Classes */
@@ -96,11 +108,24 @@ button.filter-button {
   padding: 20px;
 }
 
+.teams {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.team-link {
+  border: 1px solid gray;
+  padding: 5px;
+  text-decoration: none;
+  margin: 0px 4px;
+}
+
 .teams-detail {
   display: flex;
   grid-area: teams;
-  background-color: lightgreen;
+  background-color: white;
   overflow-x: scroll;
+  padding: 10px;
 }
 
 .team-block {
@@ -144,4 +169,11 @@ button.filter-button {
   padding: 4px;
   display: none;
   width: 80%;
+}
+
+.dashboard__content {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  border: 1px solid black;
 }
