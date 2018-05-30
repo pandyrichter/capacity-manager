@@ -5,4 +5,21 @@ function calcPerc(num, den) {
   return (`${fixed}%`)
 };
 
-module.exports = { calcPerc }
+function arrayHasOneItem(obj) {
+  return Array.isArray(obj) && obj.length === 1 ? obj[0] : obj;
+}
+
+function ifPropExists(obj, prop) {
+  try {
+    return obj.hasOwnProperty(prop) ? arrayHasOneItem(obj[prop]) : null; 
+  } catch (e) {
+    console.error('Error from markUnassigned', e);
+    return null;
+  }
+}
+
+module.exports = { 
+  calcPerc,
+  arrayHasOneItem,
+  ifPropExists 
+};

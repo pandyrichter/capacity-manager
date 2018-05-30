@@ -1,7 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 import queryString from "query-string";
 
-import ProjectDetail from "./ProjectDetail";
+import Project from "./Project";
+
+import { lookupTeamById, lookupPmById } from "../helpers/data";
+import { ifPropExists } from "../helpers/utils";
 
 // Replace this with call to Airtable
 function filterProjectsbyTeam(ps, team="") {
@@ -11,30 +15,30 @@ function filterProjectsbyTeam(ps, team="") {
   else {
     return ps.filter(p => {
       return (
-        p["Team Submitted"] &&
-        p["Team Submitted"].includes(team)
+        p.fields["Team Submitted"] &&
+        p.fields["Team Submitted"].includes(team)
       );
     });
   }
-}
+};
 
 function filterProjectsByStatus(ps, f) {
   switch (f) {
     case "Outstanding":
-      return ps.filter(p => !p["Status Update"]);
+      return ps.filter(p => !p.fields["Status Update"]);
     case "Won":
-      return ps.filter(p => p["Status Update"] === "Closed Won");
+      return ps.filter(p => p.fields["Status Update"] === "Closed Won");
     case "Lost":
-      return ps.filter(p => p["Status Update"] === "Closed Lost");
+      return ps.filter(p => p.fields["Status Update"] === "Closed Lost");
     case "Closed":
-      return ps.filter(p => p["Status Update"]);
+      return ps.filter(p => p.fields["Status Update"]);
     default:
       return ps;
   }
-}
+};
 
-export default function Projects (props) {
-  const projects = props.projects;
+function Projects (props) {
+  const { projects, projectManagers, teams } = props;
 
   const { teamName } = props.match.params;
   const { filter } = queryString.parse(props.location.search);
@@ -45,9 +49,27 @@ export default function Projects (props) {
   return (
     <div>
       <h2>{filter ? `${filter} Projects` : `All Projects`}</h2>
+      <hr/>
       <ul>
-        {filteredProjects.map((p, id) => <ProjectDetail key={id} project={p} /> )}
+        {filteredProjects.map((p, id) => {
+            const pmId = ifPropExists(p.fields, "PM");
+            const teamId = ifPropExists(p.fields, "Team");
+            return (
+              <Project 
+                key={id} 
+                project={p}
+                team={lookupTeamById(teams, teamId)}
+                pm={lookupPmById(projectManagers, pmId)} 
+              />
+            )
+        })}
       </ul>
     </div>
   )
-}
+};
+
+Projects.propTypes = {
+  projects: PropTypes.array
+};
+
+module.exports = Projects;

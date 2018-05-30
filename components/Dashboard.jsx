@@ -6,7 +6,7 @@ import TeamView from "./TeamView";
 import Projects from "./Projects";
 import FilterBar from "./FilterBar";
 
-import { fetchProjectRecords, fetchTeams } from "../helpers/data";
+import { fetchProjectRecords, fetchTeams, fetchProjectManagers } from "../helpers/data";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -16,7 +16,8 @@ class Dashboard extends React.Component {
       teams: [],
       teamsLoading: true,
       projects: [],
-      projectsLoading: true
+      projectsLoading: true,
+      projectManagers: []
     }
   }
 
@@ -35,10 +36,14 @@ class Dashboard extends React.Component {
         projectsLoading: false
       });
     });
+
+    fetchProjectManagers().then(res => {
+      this.setState({projectManagers: [...res]});
+    });
   }
 
   render() {
-    const { projects, projectsLoading, teams } = this.state;
+    const { projects, projectsLoading, teams, projectManagers } = this.state;
     const { filter } = queryString.parse(this.props.location.search);
 
     const checkForFilter = (f) => f ? `?filter=${f}` : '';
@@ -64,20 +69,29 @@ class Dashboard extends React.Component {
           {teams.map(team => {
             return (
               <Link
-                key={team["Team Name"]} 
+                key={team.id} 
                 to={{
-                  pathname: `/${team["Team Name"]}`,
+                  pathname: `/${team.fields["Team Name"]}`,
                   search: checkForFilter(filter)
                 }}
                 className='team-link'
-                >{team["Team Name"]}
+                >{team.fields["Team Name"]}
               </Link>
             )
           })}
         </div>
         <div className="dashboard__content">
           <Route render={(props) => <TeamView {...props} projects={projects}/>} />
-          <Route render={(props) => <Projects {...props} projects={projects}/>} />
+          <Route render={(props) => {
+            return (
+              <Projects 
+              {...props} 
+              projects={projects}
+              teams={teams} 
+              projectManagers={projectManagers}
+              />
+            )
+          }} />
         </div>
         </div>)}
       </div>

@@ -46,7 +46,7 @@ class FilterBar extends React.Component {
   }
 
   render() {
-    const { match, activeFilter } = this.props;
+    const { filter } = this.props.match;
 
     const filterTypes = ["Outstanding", "Won", "Lost", "Open", "In Closing", "Closed"];
 
@@ -57,22 +57,23 @@ class FilterBar extends React.Component {
     };
 
     const inactiveStyle = {
-      backgroundColor: "transparent"
+      backgroundColor: "transparent",
+      color: "black"
     };
 
     return (
       <div className="filter-bar">
         <div className="filter-button-wrapper">
           <h2>Filter:</h2>
-          {filterTypes.map(filter => {
+          {filterTypes.map(f => {
             return (
               <button
-              key={filter}
+              key={f}
               onClick={this.handleFilterChange}
-              value={filter}
+              value={f}
               className="filter-button"
-              style={filter === this.state.activeFilter ? activeStyle : inactiveStyle }
-              >{filter}
+              style={f === filter ? activeStyle : inactiveStyle }
+              >{f}
               </button>
             );
           })}
