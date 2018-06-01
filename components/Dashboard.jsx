@@ -5,8 +5,43 @@ import queryString from "query-string";
 import TeamView from "./TeamView";
 import Projects from "./Projects";
 import FilterBar from "./FilterBar";
+import SearchBar from "./SearchBar";
+import ResourceContainer from "./ResourceContainer";
+
+import { 
+  Paper, 
+  Chip,
+  CircularProgress,
+  LinearProgress,
+  Typography,
+  Divider,
+  withStyles
+  } from "material-ui";
 
 import { fetchProjectRecords, fetchTeams, fetchProjectManagers } from "../helpers/data";
+
+const styles = {
+  resources: {
+    padding: 20,
+  },
+  teams: {
+    height: 75,
+    padding: 10
+  },
+  pms: {
+    height: 75,
+    padding: 10,
+    overflowX: 'scroll'
+  },
+  content: {
+    display: 'grid',
+    gridTemplateColumns: '50% 50%',
+    padding: 20
+  },
+  projects: {
+    padding: 15
+  }
+};
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -15,9 +50,10 @@ class Dashboard extends React.Component {
     this.state = {
       teams: [],
       teamsLoading: true,
+      projectManagers: [],
+      pmsLoading: true,
       projects: [],
-      projectsLoading: true,
-      projectManagers: []
+      projectsLoading: true
     }
   }
 
@@ -30,73 +66,109 @@ class Dashboard extends React.Component {
       });
     });
 
+    fetchProjectManagers().then(res => {
+      this.setState({
+        projectManagers: [...res],
+        pmsLoading: false
+      });
+    });
+
     fetchProjectRecords().then(res => {
       this.setState({
         projects: [...res],
         projectsLoading: false
       });
     });
-
-    fetchProjectManagers().then(res => {
-      this.setState({projectManagers: [...res]});
-    });
   }
 
   render() {
     const { projects, projectsLoading, teams, projectManagers } = this.state;
     const { filter } = queryString.parse(this.props.location.search);
+    const { classes } = this.props;
 
     const checkForFilter = (f) => f ? `?filter=${f}` : '';
 
-    // TODO: Filter, search, sort projects here, then pass to components?
-
     return (
-      <div className="dashboard">
-        <Route render={(props) => <FilterBar {...props} activeFilter={filter} />} />
+      <div>
+        <Paper>
+          <div className={classes.resources}>
+            {/* <div className={classes.teams}>
+              {this.state.teamsLoading
+              ? <div>Teams: <span><CircularProgress /></span></div>
+              : (<div>
+                <div className="teams">
+                  <Typography variant="title" gutterBottom={true}>Teams</Typography>
+                  <Chip 
+                    to={{
+                      pathname: `/bw`,
+                      search: checkForFilter(filter)
+                    }}
+                    className='resource-chip'
+                    label="All"
+                    >All Teams
+                  </Chip>
+                  {teams.map(team => {
+                    return (
+                      <Chip
+                        key={team.id} 
+                        to={{
+                          pathname: `/${team.fields["Name"]}`,
+                          search: checkForFilter(filter)
+                        }}
+                        label={team.fields["Name"]}
+                        // className='resource-chip'
+                        component={Link}
+                        >{team.fields["Name"]}
+                      </Chip>
+                    )
+                  })}
+                </div>
+              </div>)}
+            </div> */}
+          <div className={classes.teams}>
+            {this.state.teamsLoding
+            ? <div className="flex">Teams: <span><CircularProgress /></span></div>
+            : <Route render={(props) => <ResourceContainer {...props} resourceType="Teams" resources={teams}/>} />}
+          </div>
+          <Divider />
+          <div className={classes.pms}>
+            {this.state.pmsLoading
+            ? <div className="flex">Project Managers: <span><CircularProgress /></span></div>
+            : <Route render={(props) => <ResourceContainer {...props} resourceType="Project Managers" resources={projectManagers}/>} />}
+          </div>
+          </div>
+        </Paper>
+        <Divider />
         {this.state.projectsLoading
-        ? <div>Loading</div>
-        : (<div>
-        <div className="teams">
-          <h2>Teams: </h2>
-          <Link 
-            to={{
-              pathname: `/bw`,
-              search: checkForFilter(filter)
-            }}
-            className='team-link'
-            >All Teams
-          </Link>
-          {teams.map(team => {
-            return (
-              <Link
-                key={team.id} 
-                to={{
-                  pathname: `/${team.fields["Team Name"]}`,
-                  search: checkForFilter(filter)
-                }}
-                className='team-link'
-                >{team.fields["Team Name"]}
-              </Link>
-            )
-          })}
+        ? <LinearProgress color="secondary"/>
+        : (
+          <Paper>
+            <div className={classes.content}>
+              <Route render={(props) => <TeamView {...props} projects={projects}/>} />
+              <Paper>
+                  <div className={classes.projects}>    
+                    <Typography variant="title" gutterBottom>{filter ? `${filter} Projects` : 'All Projects'}</Typography>
+                    <Divider />
+                    <Route render={(props) => <SearchBar {...props} />} />
+                    <Route render={(props) => <FilterBar {...props} activeFilter={filter} />} />
+                    <Route render={(props) => {
+                      return (
+                        <Projects 
+                        {...props} 
+                        projects={projects}
+                        teams={teams} 
+                        projectManagers={projectManagers}
+                        />
+                      )
+                    }} />
+                </div>
+              </Paper>
+            </div>
+          </Paper>
+        )}
         </div>
-        <div className="dashboard__content">
-          <Route render={(props) => <TeamView {...props} projects={projects}/>} />
-          <Route render={(props) => {
-            return (
-              <Projects 
-              {...props} 
-              projects={projects}
-              teams={teams} 
-              projectManagers={projectManagers}
-              />
-            )
-          }} />
-        </div>
-        </div>)}
-      </div>
     )
   }
 }
 
-module.exports = Dashboard;
+module.exports = withStyles(styles)(Dashboard);

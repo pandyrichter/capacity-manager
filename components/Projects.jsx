@@ -48,9 +48,6 @@ function Projects (props) {
 
   return (
     <div>
-      <h2>{filter ? `${filter} Projects` : `All Projects`}</h2>
-      <hr/>
-      <ul>
         {filteredProjects.map((p, id) => {
             const pmId = ifPropExists(p.fields, "PM");
             const teamId = ifPropExists(p.fields, "Team");
@@ -63,7 +60,6 @@ function Projects (props) {
               />
             )
         })}
-      </ul>
     </div>
   )
 };
