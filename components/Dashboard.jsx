@@ -53,8 +53,11 @@ class Dashboard extends React.Component {
       projectManagers: [],
       pmsLoading: true,
       projects: [],
-      projectsLoading: true
+      projectsLoading: true,
+      searchTerm: "",
+      filterParam: "Oustanding"
     }
+
   }
 
   componentDidMount() {
@@ -92,50 +95,17 @@ class Dashboard extends React.Component {
       <div>
         <Paper>
           <div className={classes.resources}>
-            {/* <div className={classes.teams}>
-              {this.state.teamsLoading
-              ? <div>Teams: <span><CircularProgress /></span></div>
-              : (<div>
-                <div className="teams">
-                  <Typography variant="title" gutterBottom={true}>Teams</Typography>
-                  <Chip 
-                    to={{
-                      pathname: `/bw`,
-                      search: checkForFilter(filter)
-                    }}
-                    className='resource-chip'
-                    label="All"
-                    >All Teams
-                  </Chip>
-                  {teams.map(team => {
-                    return (
-                      <Chip
-                        key={team.id} 
-                        to={{
-                          pathname: `/${team.fields["Name"]}`,
-                          search: checkForFilter(filter)
-                        }}
-                        label={team.fields["Name"]}
-                        // className='resource-chip'
-                        component={Link}
-                        >{team.fields["Name"]}
-                      </Chip>
-                    )
-                  })}
-                </div>
-              </div>)}
-            </div> */}
-          <div className={classes.teams}>
-            {this.state.teamsLoding
-            ? <div className="flex">Teams: <span><CircularProgress /></span></div>
-            : <Route render={(props) => <ResourceContainer {...props} resourceType="Teams" resources={teams}/>} />}
-          </div>
-          <Divider />
-          <div className={classes.pms}>
-            {this.state.pmsLoading
-            ? <div className="flex">Project Managers: <span><CircularProgress /></span></div>
-            : <Route render={(props) => <ResourceContainer {...props} resourceType="Project Managers" resources={projectManagers}/>} />}
-          </div>
+            <div className={classes.teams}>
+              {this.state.teamsLoding
+              ? <div className="flex">Teams: <span><CircularProgress /></span></div>
+              : <Route render={(props) => <ResourceContainer {...props} resourceType="Teams" resources={teams}/>} />}
+            </div>
+            <Divider />
+            <div className={classes.pms}>
+              {this.state.pmsLoading
+              ? <div className="flex">Project Managers: <span><CircularProgress /></span></div>
+              : <Route render={(props) => <ResourceContainer {...props} resourceType="Project Managers" resources={projectManagers}/>} />}
+            </div>
           </div>
         </Paper>
         <Divider />
@@ -149,6 +119,7 @@ class Dashboard extends React.Component {
                   <div className={classes.projects}>    
                     <Typography variant="title" gutterBottom>{filter ? `${filter} Projects` : 'All Projects'}</Typography>
                     <Divider />
+                    {/* Using route to access history... But is this always necessary? */}
                     <Route render={(props) => <SearchBar {...props} />} />
                     <Route render={(props) => <FilterBar {...props} activeFilter={filter} />} />
                     <Route render={(props) => {

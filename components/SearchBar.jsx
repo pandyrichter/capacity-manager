@@ -8,6 +8,7 @@ import {
 const styles = {
   searchBar: {
     marginBottom: 25,
+    marginTop: 25
   }
 };
 

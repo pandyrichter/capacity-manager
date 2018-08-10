@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 
 import TeamBlock from "./TeamBlock";
-import ProjectDetail from "./ProjectDetail";
+import Project from "./Project";
 
 import DataCall from '../helpers/data';
 

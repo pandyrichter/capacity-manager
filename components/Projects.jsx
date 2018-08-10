@@ -22,6 +22,21 @@ function filterProjectsbyTeam(ps, team="") {
   }
 };
 
+function getFilteredProjects(projects, filter) {
+  switch (filter) {
+    case ProjectFilters.SHOW_ALL:
+      return projects;
+    case ProjectFilters.SHOW_OUTSTANDING:
+      return projects.filter(p => !p.fields["Status Update"]);
+    case ProjectFilters.SHOW_WON:
+      return projects.filter(p => p["Status Update"] === "Closed Won");
+    case ProjectFilters.SHOW_LOST:
+      return projects.filter(p => p["Status Update"] === "Closed Lost");
+    default:
+      throw new Error('Unknown filter:' + filter);
+  }
+}
+
 function filterProjectsByStatus(ps, f) {
   switch (f) {
     case "Outstanding":

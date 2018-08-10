@@ -1,4 +1,4 @@
-function calcPerc(num, den) {
+function formatAsPerc(num, den) {
   let calc = num / den;
   let f = calc * 100;
   let fixed = Number.parseFloat(f).toFixed(1);
@@ -19,7 +19,7 @@ function ifPropExists(obj, prop) {
 }
 
 module.exports = { 
-  calcPerc,
+  formatAsPerc,
   arrayHasOneItem,
   ifPropExists 
 };

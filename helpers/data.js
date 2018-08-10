@@ -92,7 +92,7 @@ function lookupTeamById (ts, tid) {
     const tObj = ts.find(t => t.id === tid);
     // fields prop is specific to Airtable
     // "Team Name" is BW field
-    const tName = tObj.fields["Team Name"];
+    const tName = tObj.fields["Name"];
     return tName;
   } catch (err) {
     return "Unassigned";

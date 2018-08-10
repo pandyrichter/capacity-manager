@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { ProjectFilters } from "../store/interface";
 
 import { 
   Chip,
@@ -58,7 +59,7 @@ class FilterBar extends React.Component {
     return (
       <div className={classes.filterBar}>
           <Typography variant="title">Filter</Typography>
-          <div className="filter-button-wrapper">
+          {/* <div className="filter-button-wrapper">
             {filterTypes.map(f => {
               return (
                 <Chip
@@ -67,11 +68,18 @@ class FilterBar extends React.Component {
                 value={f}
                 label={f}
                 className={classes.filterChip}
-                // style={f === filter ? activeStyle : inactiveStyle }
                 >{f}
                 </Chip>
               );
             })}
+          </div> */}
+          <div className="filter-button-wrapper">
+            <Chip filter={ProjectFilters.SHOW_ALL} label="All"></Chip>
+            <Chip filter={ProjectFilters.SHOW_OUTSTANDING} label="Outstanding"></Chip>
+            <Chip filter={ProjectFilters.SHOW_WON} label="Won"></Chip>
+            <Chip filter={ProjectFilters.SHOW_LOST} label="Lost"></Chip>
+            <Chip filter={ProjectFilters.SHOW_ACTIVE} label="Active"></Chip>
+            <Chip filter={ProjectFilters.SHOW_CLOSED} label="Closed"></Chip>
           </div>
       </div>
     );

@@ -6,29 +6,13 @@ import {
   BrowserRouter as Router } from "react-router-dom";
 
 import NavBar from "./NavBar";
-import FilterBar from "./FilterBar";
-import DataContainer from "./DataContainer";
 import Dashboard from "./Dashboard";
 import Settings from "./Settings";
 
 class App extends React.Component {
   constructor() {
     super();
-    this.state = {
-      searchTerm: "",
-      filterParam: "Outstanding"
-    };
 
-    this.handleSearchTermChange = this.handleSearchTermChange.bind(this);
-    this.handleFilterParamChange = this.handleFilterParamChange.bind(this);
-  }
-
-  handleSearchTermChange(t) {
-    this.setState({ searchTerm: t });
-  }
-
-  handleFilterParamChange(f) {
-    this.setState({ filterParam: f });
   }
 
   render() {
